@@ -3722,3 +3722,8 @@ inline void solve(){
     cout<<volume/6<<endl;//面积除2 体积除3 最后处理
 }
 ```
+
+## $资料速查$
+
+![1.jpg](https://s2.loli.net/2024/11/08/eXHrPBtsfZR83V6.jpg)
+![2.png](https://s2.loli.net/2024/11/08/5tPBOuFN8VM3ek9.png)
