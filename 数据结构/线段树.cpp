@@ -252,7 +252,8 @@ struct LazySegmentTree{//base1
 
 template<class info,class tag>
 struct DLazySegmentTree{
-    int L,R;
+    int L,R,cnt;
+    const int M=1e6;
     vector<info> tree;
     vector<tag> lazy;
     vector<int> lson,rson;
@@ -263,9 +264,13 @@ struct DLazySegmentTree{
         for(int i=L;i<=R;i++)modify(i,_init[i]);
     }
     int build(){
-        tree.push_back(info());lazy.push_back(tag());
-        lson.push_back(0);rson.push_back(0);
-        return (int)tree.size()-1;
+        tree[++cnt]=info();
+        return cnt;
+    }
+    void init(int l,int r){
+        tree.resize(M);lazy.resize(M);
+        lson.resize(M);rson.resize(M);
+        L=l,R=r;cnt=-1;build();build();
     }
     void init(int l,int r){
         L=l,R=r;build();build();
