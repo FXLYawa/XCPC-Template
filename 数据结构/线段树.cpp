@@ -157,12 +157,12 @@ struct SegmentTree{
     }
 };
 template<class info,class tag>
-struct LazySegmentTree{//base1
+struct LazySegmentTree{//base0
     int n;
     vector<info> tree;
     vector<tag> lazy;
     LazySegmentTree(){}//初始化空树
-    LazySegmentTree(int n,info _init=info()){//下面参数为n则base0
+    LazySegmentTree(int n,info _init=info()){//下面参数为n+1则base1
         init(vector<info>(n,_init));//初始化成info成_init
     }
     LazySegmentTree(const vector<info> &_init){init(_init);}
