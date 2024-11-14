@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-
 using namespace std;
+
 
 /***********************************************/
 //区间加 乘 求和
@@ -339,5 +339,69 @@ struct DLazySegmentTree{
     }
     info query(int x,int y){
         return query(x,y,1,L,R);
+    }
+};
+
+constexpr double eps=1e-9;
+struct LCSegmentTree{//李超线段树(动态开点)
+    struct Seg{
+        double k=0,b=0;//区间最优势线段的k,b
+        int l=0,r=0;//l,r为区间。
+        Seg(){}
+        Seg(double k,double b,int l,int r):k(k),b(b),l(l),r(r){}
+        inline double calc(int x){return k*x+b;}//返回线段在x处的y值
+    };
+    int cnt,L,R;
+    const int M=2e5;
+    vector<Seg> tree;
+    vector<int> lson,rson,flag;//flag为该区间已经记录最优势线段标记。
+    LCSegmentTree(int l,int r){
+        cnt=1,L=l,R=r;
+        tree.resize(M);flag.resize(M);
+        lson.resize(M);rson.resize(M);
+    }
+    void modify(int x,int y,Seg v,int p,int l,int r){
+        if(y<l||r<x)return;
+        if(x<=l&&r<=y){
+            if(!flag[p]){//没有优势线段直接更新 
+                tree[p]=v;flag[p]=1;
+                return;
+            }
+            int m=(l+r)/2;
+            //将中点处更优的标记保留，劣的递归处理
+            if(v.calc(m)-tree[p].calc(m)>eps)swap(tree[p],v);
+            if(l>=r)return;
+            if(v.calc(l)-tree[p].calc(l)>eps){
+                if(!lson[p])lson[p]=++cnt;
+                modify(x,y,v,lson[p],l,m);
+            }//如果有交点，递归处理
+            if(v.calc(r)-tree[p].calc(r)>eps){
+                if(!rson[p])rson[p]=++cnt;
+                modify(x,y,v,rson[p],m+1,r);
+            }
+            return;
+        }
+        int m=(l+r)/2;
+        if(!lson[p])lson[p]=++cnt;
+        if(!rson[p])rson[p]=++cnt;
+        modify(x,y,v,lson[p],l,m);
+        modify(x,y,v,rson[p],m+1,r);
+    }
+    void modify(int x,int y,Seg v){
+        modify(x,y,v,1,L,R);
+    }
+    double query(int x,int p,int l,int r){
+        double res=0;
+        if(!p)return res;
+        if(x<l||r<x)return res;
+        if(flag[p])res=max(res,tree[p].calc(x));
+        if(l==r)return res;
+        int m=(l+r)/2;
+        res=max(res,query(x,lson[p],l,m));
+        res=max(res,query(x,rson[p],m+1,r));
+        return res;
+    }
+    double query(int x){
+        return query(x,1,L,R);
     }
 };
