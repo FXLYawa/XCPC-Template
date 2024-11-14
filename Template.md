@@ -40,35 +40,6 @@ while(l < r) {
 cout << max(calc(l), calc(r)) << endl;
 ```
 
-### $离散化$
-
-```C++
-vector<int> tmp(arr);  // tmp 是原数据的一个副本
-sort(al(tmp));
-tmp.erase(std::unique(al(tmp)), tmp.end());
-for (int i=0;i<n;++i)
-    arr[i]=lower_bound(al(tmp),arr[i])-tmp.begin();
-```
-
-### $约瑟夫问题$
-
-```C++
-int josephus(int n,int k) { //n
-  int res = 0;
-  for(int i=1;i<=n;++i)res=(res+k)%i;
-  return res;
-}
-
-// klogn   n总人数  m找第m个出列的  报到k出列
-int josephus(int n,int m,int k) {
-    if(k==1)return (m-1)%n;
-    if(m==1)return k-1;
-    if(m>=k)return (josephus(n-1,m,k-1)+m)%n;
-    int q=min(k-1,n/m),p=josephus(n-q,m,k-q)+q*m-n;
-    return p<0?p+n:p+p/(m-1);
-}
-```
-
 ### $火车头$
 
 ```C++
@@ -106,17 +77,32 @@ cout.tie(0);    //关闭同步  如果使用 则不要使用<cstdio>
 cout << fixed << setprecision(10);
 ```
 
-### $对拍$
+### $离散化$
 
 ```C++
-while(1){
-    system("create.exe>data.in");
-    system("A.exe<data.in>A.out");
-    system("B.exe<data.in>B.out");
-    if(system("fc A.out B.out")){
-        cout<<"error"<<endl;
-        break;
-    }
+vector<int> tmp(arr);  // tmp 是原数据的一个副本
+sort(al(tmp));
+tmp.erase(std::unique(al(tmp)), tmp.end());
+for (int i=0;i<n;++i)
+    arr[i]=lower_bound(al(tmp),arr[i])-tmp.begin();
+```
+
+### $约瑟夫问题$
+
+```C++
+int josephus(int n,int k) { //n
+  int res = 0;
+  for(int i=1;i<=n;++i)res=(res+k)%i;
+  return res;
+}
+
+// klogn   n总人数  m找第m个出列的  报到k出列
+int josephus(int n,int m,int k) {
+    if(k==1)return (m-1)%n;
+    if(m==1)return k-1;
+    if(m>=k)return (josephus(n-1,m,k-1)+m)%n;
+    int q=min(k-1,n/m),p=josephus(n-q,m,k-q)+q*m-n;
+    return p<0?p+n:p+p/(m-1);
 }
 ```
 
@@ -257,6 +243,20 @@ struct Bigint {
         for( int i = a.size() - 1; i >= 0; i-- ) putchar(a[i]);
     }
 };
+```
+
+### $对拍$
+
+```C++
+while(1){
+    system("create.exe>data.in");
+    system("A.exe<data.in>A.out");
+    system("B.exe<data.in>B.out");
+    if(system("fc A.out B.out")){
+        cout<<"error"<<endl;
+        break;
+    }
+}
 ```
 
 ## $动态规划$
@@ -445,7 +445,6 @@ struct tree_array{           //树状数组 0号位置始终为0；
         return ans;
     }
 };
-
 struct tree_array_2D{           //二维树状数组 0号位置始终为0；     
     int n;vector<vector<int>> array; //int array[n+1][n+1]
     tree_array_2D(int n):array(n+1,vector<int>(n+1)),n(n){}
@@ -463,31 +462,24 @@ struct tree_array_2D{           //二维树状数组 0号位置始终为0；
     }
 };
 
-
 namespace build{    //仅考虑一维，二维可简单拓展
-    int add(int pos,int x);
-
-    const int n=1000;
-    vector<int> array(n);
-
     //对每个点进行一次add操作    //O(nlogn)
     void buildA(vector<int> &a){  
-        array[0]=0;
+        int n=a.size()-1;array.resize(n+1);array[0]=0;
         for(int i=1;i<=n;i++){add(i,a[i]);}
     }
-
     void buildB(vector<int> &a){    //考虑每次更新儿子时 都对父亲做一次贡献     //O(n)
         for(int i=1;i<=n;i++){
-            array[i]+=a[i];     should_change//更新方法和维护数据有关
+            array[i]+=a[i];//更新方法和维护数据有关
             int j=i+lowbit(i);
-            if(j<=n)array[j]+=array[i];should_change //更新方法和维护数据有关
+            if(j<=n)array[j]+=array[i];
         }
     }
 
     vector<int> t;      //预处理数组
     void buildC(vector<int> &a){    //用预处理数组更新    //O(n)
         for(int i=1;i<=n;i++){
-            array[i]=t[i]-t[i-lowbit(i)]; should_change //更新方法和维护数据有关
+            array[i]=t[i]-t[i-lowbit(i)]; //更新方法和维护数据有关
         }
     }
 }
@@ -1195,28 +1187,30 @@ void CDQ(int l,int r){//分治区间
 ### $Trie$
 
 ```c++
-int mxcnt=0;
-int trie[maxn][26]; 
-int exist[maxn];
-void insert(string& s,int l){
-    int p=0;int c;
-    for(int i=0;i<l;i++){
-        c=s[i]-'0';
-        if(!trie[p][c])
-            trie[p][c]=++mxcnt;
-        p=trie[p][c];
+struct trie{
+    int mxcnt=0; vector<array<int,26>> tr; vector<int> exist;
+    trie(int n){mxcnt=0; tr.resize(n+1); exist.resize(n+1);}
+    void insert(string& s){
+        int l=s.size();
+        int p=0;int c;
+        for(int i=0;i<l;i++){
+            c=s[i]-'0';
+            if(!tr[p][c])tr[p][c]=++mxcnt;
+            p=tr[p][c];
+        }
+        exist[p]=1;
     }
-    exist[p]=1;
-}
-bool find(string& s,int l){
-    int p=0;int c;
-    for(int i=0;i<l;i++){
-        c=s[i]-'0';
-        if(!trie[p][c])return false;
-        p=trie[p][c];
+    bool find(string& s){
+        int l=s.size();
+        int p=0;int c;
+        for(int i=0;i<l;i++){
+            c=s[i]-'0';
+            if(!tr[p][c])return false;
+            p=tr[p][c];
+        }
+        return exist[p];
     }
-    return exist[p];
-}
+};
 ```
 
 ### $分块数组$
@@ -1962,8 +1956,32 @@ inline void solve(){    //开始
 }
 ```
 
+### $树哈希$
+
+```C++
+int mask=rnd();
+int hs=rnd();
+vector<ull> trhash;
+vector<vector<int>> g;
+ull shift(ull x){//哈希函数 乱搞就行
+    x^=mask;
+    x^=x<<15;x^=x>>3;x^=x<<12;
+    x=x*x*x*mask;
+    return x^mask;
+}//换根的时候只需要直接减去hash值
+void getHash(int u,int fa){
+    trhash[u]=1;
+    for(auto v:g[u]){
+        if(v==fa)continue;
+        getHash(v,u);
+        trhash[u]+=shift(trhash[v]);
+    }
+}
+```
+
 ### $点分治$
 
+```C++
 我们在点分治过程中每次选取子树的重心为子树的树根进行处理，
 这样总的递归深度不会超过logN层，整个点分治的时间复杂度也就保证了O(NlogN)
 点分治题的思想大都如上， 对于不同的题要设计不同的calc函数
@@ -1972,7 +1990,6 @@ inline void solve(){    //开始
 第一行两个数n,m。第2到第n行，每行三个整数 u,v,w，代表树上存在一条连接u和v边权w 的路径。
 接下来m行，每行一个整数k，代表一次询问
 
-```C++
 struct edge{int v,w;};
 vector<vector<edge>> g;
 vector<int> siz,maxp,vis,re,dis,query,test;
@@ -2049,29 +2066,6 @@ inline void solve(){
     maxp[rt]=sum=n;
     getroot(1,0);work(rt);
     for(int i=1;i<=m;i++)cout<<(test[i]?"AYE":"NAY")<<endl;
-}
-```
-
-### $树哈希$
-
-```C++
-int mask=rnd();
-int hs=rnd();
-vector<ull> trhash;
-vector<vector<int>> g;
-ull shift(ull x){//哈希函数 乱搞就行
-    x^=mask;
-    x^=x<<15;x^=x>>3;x^=x<<12;
-    x=x*x*x*mask;
-    return x^mask;
-}//换根的时候只需要直接减去hash值
-void getHash(int u,int fa){
-    trhash[u]=1;
-    for(auto v:g[u]){
-        if(v==fa)continue;
-        getHash(v,u);
-        trhash[u]+=shift(trhash[v]);
-    }
 }
 ```
 
@@ -3379,6 +3373,17 @@ int calc_xor(int n){//求1-n的前缀异或
 
 ## $计算几何$
 
+### $精度相关$
+
+```C++
+// cout << fixed << setprecision(15);
+const double eps=1e-10;
+const double pi = acos(-1.0);
+int dcmp(double x){//判断正负
+    return (fabs(x)<=eps)?0:(x<0?-1:1);
+}
+```
+
 ### $点与向量$
 
 ```C++
@@ -3506,17 +3511,6 @@ inline vector<Line> cal_tangent(Point p,Circle o){
         double rad=asin(o.r/d);//两条切线 旋转返回
         return {{p,PointRotate(tmp,rad)},{p,PointRotate(tmp,-rad)}};
     }
-}
-```
-
-### $精度相关$
-
-```C++
-// cout << fixed << setprecision(15);
-const double eps=1e-10;
-const double pi = acos(-1.0);
-int dcmp(double x){//判断正负
-    return (fabs(x)<=eps)?0:(x<0?-1:1);
 }
 ```
 

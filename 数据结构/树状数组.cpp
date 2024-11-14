@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define should_change
 
 #define lowbit(x)       (x&-x)
 //维护满足结合律并且 知道x（）y 和x 可以推出y是多少的运算
@@ -55,16 +54,16 @@ namespace build{    //仅考虑一维，二维可简单拓展
 
     void buildB(vector<int> &a){    //考虑每次更新儿子时 都对父亲做一次贡献     //O(n)
         for(int i=1;i<=n;i++){
-            array[i]+=a[i];     should_change//更新方法和维护数据有关
+            array[i]+=a[i];     //更新方法和维护数据有关
             int j=i+lowbit(i);
-            if(j<=n)array[j]+=array[i];should_change //更新方法和维护数据有关
+            if(j<=n)array[j]+=array[i]; //更新方法和维护数据有关
         }
     }
 
     vector<int> t;      //预处理数组
     void buildC(vector<int> &a){    //用预处理数组更新    //O(n)
         for(int i=1;i<=n;i++){
-            array[i]=t[i]-t[i-lowbit(i)]; should_change //更新方法和维护数据有关
+            array[i]=t[i]-t[i-lowbit(i)];  //更新方法和维护数据有关
         }
     }
 }
