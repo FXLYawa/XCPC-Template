@@ -57,24 +57,19 @@ struct LastingSegmentTree{
     }
 };
 
-
-//可持久化数组
 template<class info>
 struct LastingArray{
     int L,R,cnt,rt;
     vector<info> tree;
     vector<int> root;
     vector<int> lson,rson;
-    LastingArray(){}
-    LastingArray(int l,int r,int m){init(l,r,m);}
     LastingArray(const vector<info> &_init,int m){//base1
-        init(1,_init.size(),m);
+        init(1,_init.size()-1,m);
         function<void(int,int,int)> build=[&](int p,int l,int r){//建树，[l,r]对应节点为p
             if(l==r){
                 tree[p]=_init[l];
                 return;
             }
-            create(p);
             int m=(l+r)/2;
             build(lson[p]=++cnt,l,m);
             build(rson[p]=++cnt,m+1,r);
@@ -88,10 +83,6 @@ struct LastingArray{
         lson.resize(n+1);rson.resize(n+1);
         L=l,R=r,cnt=0,rt=0;
     }
-    void create(int p){
-        if(!lson[p])lson[p]=++cnt;
-        if(!rson[p])rson[p]=++cnt;
-    }
     void pushup(int p){//用子节点维护父节点 注意lazy标记的值
         tree[p]=tree[lson[p]]+tree[rson[p]];
     }
@@ -102,7 +93,6 @@ struct LastingArray{
             return;
         }
         int m=(l+r)/2;
-        create(p);
         if(x<=m){
             rson[now]=rson[p];
             lson[now]=++cnt;tree[cnt]=tree[lson[p]];
@@ -127,8 +117,22 @@ struct LastingArray{
         else return query(x,rson[p],m+1,r);
     }
     int query(int x,int board){
+        root[++rt]=root[board];
+        return query(x,root[rt],L,R);
+    }
+    //区间查询
+    int query(int x,int y,int p,int l,int r){
+        if(y<l||r<x)return 0;
+        if(x<=l&&r<=y)return tree[p];
+        int m=(l+r)/2;
+        return query(x,y,lson[p],l,m)+query(x,y,rson[p],m+1,r);
+    }
+    int query(int x,int y,int board){
+        root[++rt]=root[board];
+        return query(x,y,root[rt],L,R);
+    }
+    void backto(int board){
         root[++rt]=++cnt;
         lson[cnt]=lson[root[board]];rson[cnt]=rson[root[board]];
-        return query(x,root[rt],L,R);
     }
 };
