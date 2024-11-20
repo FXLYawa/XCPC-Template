@@ -36,7 +36,7 @@ int findB(int pos){  //找爹  递归实现  不进行路径压缩  保持树的
 void mergeB(int i,int j){     //启发式合并     
     int fx=findB(i),fy=findB(j);
     if(r[fx]>r[fy])fa[fy]=fx;
-    else if(r[fx]>r[fy])fa[fx]=fy;
+    else if(r[fx]<r[fy])fa[fx]=fy;
     else{/*rank[fx]=rank[fy]*/ 
         fa[fy]=fx;
         ++r[fx];
