@@ -35,7 +35,12 @@ mt19937_64 rnd(time(0));
 
 constexpr int N = 1231564;
 
-inline void solve() {}
+inline void solve() {
+
+
+
+
+}
 
 signed main() {
     // freopen("E:\\work_tool\\document\\data\\input.in", "r", stdin);
