@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
-constexpr int maxn=1000;
 
-vector<int> g[maxn],indeg(maxn);
-vector<int> topu;//res
+vector<vector<int>> g;
+vector<int> indeg;
+vector<int> topu;  // res
 
-bool toposort(int n) {//节点
+bool toposort(int n) {  // 节点
     queue<int> S;
-    //用优先队列可以得到最大/最小字典序
+    // 用优先队列可以得到最大/最小字典序
     for (int i = 1; i <= n; i++)
         if (indeg[i] == 0) S.push(i);
     while (!S.empty()) {
@@ -20,7 +20,17 @@ bool toposort(int n) {//节点
                 S.push(v);
             }
         }
-    }   //返回能否构造一个拓扑序
-    if (topu.size() == n) return true;
-    else return false;
+    }  // 返回能否构造一个拓扑序
+    if (topu.size() == n)
+        return true;
+    else
+        return false;
+}
+
+void init(int n) {
+    g.clear();
+    g.resize(n + 1);
+    indeg.clear();
+    indeg.resize(n + 1);
+    topu.clear();
 }
