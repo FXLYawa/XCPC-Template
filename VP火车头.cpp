@@ -36,7 +36,7 @@ mt19937_64 rnd(time(0));
 constexpr int N = 1231564;
 
 inline void solve() {
-
+    
 
 
 
