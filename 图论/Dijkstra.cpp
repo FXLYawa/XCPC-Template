@@ -11,7 +11,7 @@ struct edge {
 
 vector<int> dis,vis;//dis初始化为INF
 // vector<int> f;
-vector<vector<edge>> e;
+vector<vector<edge>> g;
 
 void dijkstra(int s) {
     priority_queue<pii,vector<pii>,greater<pii>> q;
@@ -22,7 +22,7 @@ void dijkstra(int s) {
         q.pop();
         if (vis[u]) continue;
         vis[u] = 1;
-        for (auto ed:e[u]) {
+        for (auto ed:g[u]) {
             int v = ed.v, w = ed.w;
             if (dis[v] > dis[u] + w) {
                 dis[v] = dis[u] + w;
@@ -38,7 +38,7 @@ void dijkstra(int s) {
 
 void init(int n){
     vis.clear();vis.resize(n+1);
-    e.clear();e.resize(n+1);
+    g.clear();g.resize(n+1);
     dis.clear();dis.resize(n+1,INF);
     //f.clear();f.resize(n+1);
 }
