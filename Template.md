@@ -3949,5 +3949,5 @@ inline void solve(){
 
 ## $资料速查$
 
-![1.jpg](https://s2.loli.net/2024/11/08/eXHrPBtsfZR83V6.jpg)
-![2.png](https://s2.loli.net/2024/11/08/5tPBOuFN8VM3ek9.png)
+![1.jpg](picture/杂项1.jpg)
+![2.jpg](picture/杂项2.jpg)
