@@ -91,6 +91,7 @@ struct EK{//最大流则修改边的和加边函数的定义 删去cost
                 }
             }
         }
+        // 前提是答案不是INF(特殊情况要特判)
         return dis[t]!=INF;
     }
     pair<int,int> get_mincost(){

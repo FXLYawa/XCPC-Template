@@ -3028,6 +3028,7 @@ struct Dinic{
                 }
             }
         }
+        // 前提是答案不是INF(特殊情况要特判)
         return dis[t]!=INF;
     }
     pair<int,int> dfs(int u,int in){//流入量
