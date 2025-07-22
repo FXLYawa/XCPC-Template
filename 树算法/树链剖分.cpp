@@ -63,3 +63,14 @@ void modifypath(int u,int v){
 void modifysub(int u){
     modify(dfn[u],dfn[u]+siz[u]-1);
 }
+void getpath(int u,int v){
+    vector<array<int,2>> path;
+    while(top[u]!=top[v]){
+        if(dep[top[u]]<dep[top[v]])  
+            swap(u,v); //深度大的点先跳，保证能跳到一条重链上
+        path.push_back({dfn[top[u]], dfn[u]});
+        u=fa[top[u]];
+    }
+    if(dep[u]>dep[v]) swap(u,v);
+    path.push_back({dfn[u], dfn[v]}); //在一条重链上，直接加
+}
